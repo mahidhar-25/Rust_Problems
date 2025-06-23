@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+    </head>
+    <body>
+        <h2>Rust TCP Server Example</h2>
+        <p>
+            This is a simple TCP server written in Rust that listens for
+            incoming connections and handles them by reading data from the
+            stream and sending a response.
+        </p>
+        <h3>Code Overview</h3>
+        <pre><code>
+            use std::io::{Read, Write};
+            use std::net::{TcpListener, TcpStream};
+
+            fn handle_connection(mut stream: TcpStream) {
+                let mut buffer = [0; 1024];
+                stream.read(&mut buffer).unwrap();
+                stream.write(&buffer).unwrap();
+            }
+
+            fn main() {
+                let listener = TcpListener::bind("127.0.0.1:7878").unwrap();
+                for stream in listener.incoming() {
+                    handle_connection(stream.unwrap());
+                }
+            }
+        </code></pre>
+    </body>
+</html>
