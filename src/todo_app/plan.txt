@@ -1,0 +1,21 @@
+todo-app/
+├── src/
+│   ├── main.rs              # Entry point
+│   ├── lib.rs               # Shared types, DB setup, config
+│   ├── cli.rs               # Console app logic
+│   ├── web/
+│   │   ├── mod.rs           # Web setup, Axum router
+│   │   ├── handlers.rs      # Route handler functions
+│   │   ├── middleware.rs    # Axum middleware (logging, CORS, etc.)
+│   ├── db/
+│   │   ├── mod.rs           # DB pool and interaction
+│   │   └── queries/
+│   │       ├── create.sql
+│   │       ├── read.sql
+│   │       ├── update.sql
+│   │       ├── delete.sql
+│   ├── models.rs            # Diesel structs and schema
+├── diesel.toml
+├── .env
+├── Cargo.toml
+└── README.md
