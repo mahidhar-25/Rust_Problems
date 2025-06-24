@@ -9,21 +9,3 @@ pub fn establish_connection() -> SqliteConnection {
 }
 
 pub mod query_loader;
-
-use once_cell::sync::Lazy;
-use std::collections::HashMap;
-use std::sync::Mutex;
-
-static SQL_QUERIES: Lazy<Mutex<HashMap<String, String>>> = Lazy::new(|| {
-    let queries = query_loader::load_queries("src/db/queries/todos.sql");
-    Mutex::new(queries)
-});
-
-pub fn get_query(name: &str) -> String {
-    SQL_QUERIES
-        .lock()
-        .unwrap()
-        .get(name)
-        .expect(&format!("Query `{}` not found", name))
-        .clone()
-}

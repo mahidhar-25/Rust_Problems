@@ -1,29 +1,18 @@
-use std::collections::HashMap;
-use std::fs;
+use once_cell::sync::Lazy;
+use regex::Regex;
+use std::{collections::HashMap, fs};
 
-pub fn load_queries(path: &str) -> HashMap<String, String> {
-    let contents = fs::read_to_string(path).expect("Failed to read SQL file");
+pub static QUERY_MAP: Lazy<HashMap<String, String>> = Lazy::new(|| {
+    let content = fs::read_to_string("queries.sql").expect("Failed to read queries.sql file");
 
-    let mut queries = HashMap::new();
-    let mut current_name = None;
-    let mut current_sql = String::new();
+    let mut map = HashMap::new();
+    let re = Regex::new(r"-- name: (\w+)\n(.*?)(?=(-- name:|\z))").unwrap();
 
-    for line in contents.lines() {
-        if let Some(name) = line.strip_prefix("-- name: ") {
-            if let Some(name) = current_name.take() {
-                queries.insert(name, current_sql.trim().to_string());
-                current_sql = String::new();
-            }
-            current_name = Some(name.trim().to_string());
-        } else if current_name.is_some() {
-            current_sql.push_str(line);
-            current_sql.push('\n');
-        }
+    for cap in re.captures_iter(&content) {
+        let name = cap[1].trim().to_string();
+        let sql = cap[2].trim().to_string();
+        map.insert(name, sql);
     }
 
-    if let Some(name) = current_name {
-        queries.insert(name, current_sql.trim().to_string());
-    }
-
-    queries
-}
+    map
+});
